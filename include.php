@@ -17,7 +17,7 @@ EventManager::getInstance()->addEventHandler("main", "OnBeforeProlog", function 
 		return;
 	}
 
-	global $APPLICATION, $_APP;
+	global $APPLICATION;
 
 	$currentUrl = !empty($_SERVER["REDIRECT_URL"])?
 		$_SERVER["REDIRECT_URL"] : $APPLICATION->GetCurPage();
@@ -34,7 +34,13 @@ EventManager::getInstance()->addEventHandler("main", "OnBeforeProlog", function 
 	if (!empty($seoContent)) {
 		// get attribs
 		$seoContent["ATTRIBS"] = array();
-		$res = \CIBlockElement::GetProperty($iblockId, $seoContent["ID"], "sort", "asc", array("CODE" => "ATTRIBS"));
+		$res = \CIBlockElement::GetProperty(
+			$iblockId,
+			$seoContent["ID"],
+			"sort",
+			"asc",
+			array("CODE" => "ATTRIBS")
+		);
 		while ($v = $res->Fetch()) {
 			$seoContent["ATTRIBS"][$v["DESCRIPTION"]] = array(
 				"FIELD" => null,
@@ -43,7 +49,7 @@ EventManager::getInstance()->addEventHandler("main", "OnBeforeProlog", function 
 		}
 		// get seo tags values
 		$ipropValues = new \Bitrix\Iblock\InheritedProperty\ElementValues($iblockId, $seoContent["ID"]);
-		$_APP["rodzeta"]["seo_content"] = array_merge($ipropValues->getValues(), $seoContent);
+		$GLOBALS["rodzeta"]["seo_content"] = array_merge($ipropValues->getValues(), $seoContent);
 	}
 });
 
@@ -53,23 +59,23 @@ EventManager::getInstance()->addEventHandler("main", "OnEpilog", function () {
 		return;
 	}
 
-	global $APPLICATION, $_APP;
+	global $APPLICATION;
 
-	if (empty($_APP["rodzeta"]["seo_content"])) {
+	if (empty($GLOBALS["rodzeta"]["seo_content"])) {
 		return;
 	}
 
-	if (!empty($_APP["rodzeta"]["seo_content"]["ELEMENT_META_TITLE"])) {
-		$APPLICATION->SetPageProperty("title", $_APP["rodzeta"]["seo_content"]["ELEMENT_META_TITLE"]);
+	if (!empty($GLOBALS["rodzeta"]["seo_content"]["ELEMENT_META_TITLE"])) {
+		$APPLICATION->SetPageProperty("title", $GLOBALS["rodzeta"]["seo_content"]["ELEMENT_META_TITLE"]);
 	}
-	if (!empty($_APP["rodzeta"]["seo_content"]["ELEMENT_META_KEYWORDS"])) {
-		$APPLICATION->SetPageProperty("keywords", $_APP["rodzeta"]["seo_content"]["ELEMENT_META_KEYWORDS"]);
+	if (!empty($GLOBALS["rodzeta"]["seo_content"]["ELEMENT_META_KEYWORDS"])) {
+		$APPLICATION->SetPageProperty("keywords", $GLOBALS["rodzeta"]["seo_content"]["ELEMENT_META_KEYWORDS"]);
 	}
-	if (!empty($_APP["rodzeta"]["seo_content"]["ELEMENT_META_DESCRIPTION"])) {
-		$APPLICATION->SetPageProperty("description", $_APP["rodzeta"]["seo_content"]["ELEMENT_META_DESCRIPTION"]);
+	if (!empty($GLOBALS["rodzeta"]["seo_content"]["ELEMENT_META_DESCRIPTION"])) {
+		$APPLICATION->SetPageProperty("description", $GLOBALS["rodzeta"]["seo_content"]["ELEMENT_META_DESCRIPTION"]);
 	}
-	if (!empty($_APP["rodzeta"]["seo_content"]["ELEMENT_PAGE_TITLE"])) {
-		$APPLICATION->SetTitle($_APP["rodzeta"]["seo_content"]["ELEMENT_PAGE_TITLE"]);
+	if (!empty($GLOBALS["rodzeta"]["seo_content"]["ELEMENT_PAGE_TITLE"])) {
+		$APPLICATION->SetTitle($GLOBALS["rodzeta"]["seo_content"]["ELEMENT_PAGE_TITLE"]);
 	}
 
 });
