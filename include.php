@@ -28,7 +28,8 @@ EventManager::getInstance()->addEventHandler("main", "OnBeforeProlog", function 
 		"filter" => array(
 			"IBLOCK_ID" => $iblockId,
 			"IBLOCK_SECTION_ID" => Option::get("rodzeta.seocontent4url", "section_id", 21),
-			"NAME" => $currentUrl
+			"NAME" => $currentUrl,
+			"ACTIVE" => "Y"
 		),
 	));
 	if (!empty($seoContent)) {
