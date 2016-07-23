@@ -36,6 +36,8 @@
     #SEO_DETAIL_PICTURE_SRC#
     #SEO_DETAIL_PICTURE_DESCRIPTION#
     #SEO_DETAIL_PICTURE#
+    #SEO_SOMEATTRCODE1#
+    ...
 
 ##  Описание техподдержки и контактных данных
 
