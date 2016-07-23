@@ -79,16 +79,11 @@ EventManager::getInstance()->addEventHandler("main", "OnBeforeProlog", function 
 });
 
 EventManager::getInstance()->addEventHandler("main", "OnEpilog", function () {
-	if (CSite::InDir("/bitrix/")) {
+	if (CSite::InDir("/bitrix/") || empty($GLOBALS["RODZETA"]["SEO"])) {
 		return;
 	}
 
 	global $APPLICATION;
-
-	if (empty($GLOBALS["RODZETA"]["SEO"])) {
-		return;
-	}
-
 	if (!empty($GLOBALS["RODZETA"]["SEO"]["#SEO_ELEMENT_META_TITLE#"])) {
 		$APPLICATION->SetPageProperty("title", $GLOBALS["RODZETA"]["SEO"]["#SEO_ELEMENT_META_TITLE#"]);
 	}
@@ -102,4 +97,17 @@ EventManager::getInstance()->addEventHandler("main", "OnEpilog", function () {
 		$APPLICATION->SetTitle($GLOBALS["RODZETA"]["SEO"]["#SEO_ELEMENT_PAGE_TITLE#"]);
 	}
 
+});
+
+EventManager::getInstance()->addEventHandler("main", "OnEndBufferContent", function (&$content) {
+	if (CSite::InDir("/bitrix/") || empty($GLOBALS["RODZETA"]["SEO"])) {
+		return;
+	}
+
+	global $APPLICATION;
+	if ($APPLICATION->GetPublicShowMode() != "view") {
+		return;
+	}
+
+	$content = str_replace(array_keys($GLOBALS["RODZETA"]["SEO"]), array_values($GLOBALS["RODZETA"]["SEO"]), $content);
 });
