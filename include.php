@@ -1,4 +1,3 @@
-
 <?php
 /***********************************************************************************************
  * rodzeta.seocontent4url - SEO-content for URLs
@@ -50,10 +49,34 @@ EventManager::getInstance()->addEventHandler("main", "OnBeforeProlog", function 
 		}
 		// get seo tags values
 		$ipropValues = new \Bitrix\Iblock\InheritedProperty\ElementValues($iblockId, $seoContent["ID"]);
-		$GLOBALS["rodzeta"]["seo_content"] = array_merge($ipropValues->getValues(), $seoContent);
+		$seoContent = array_merge($ipropValues->getValues(), $seoContent);
+
+		$options = array();
+		foreach (array(
+					//"NAME",
+					"PREVIEW_TEXT",
+					"DETAIL_TEXT",
+					"ELEMENT_META_TITLE",
+					"ELEMENT_META_KEYWORDS",
+					"ELEMENT_META_DESCRIPTION",
+					"ELEMENT_PAGE_TITLE"
+				) as $code) {
+			$options["#SEO_" . $code . "#"] = $seoContent[$code];
+		}
+		foreach (array("PREVIEW_PICTURE", "DETAIL_PICTURE") as $code) {
+			$img = \CFile::GetFileArray($seoContent[$code]);
+			$options["#SEO_" . $code . "_ARRAY" . "#"] = $img;
+			$options["#SEO_" . $code . "_SRC" . "#"] = $img["SRC"];
+			$options["#SEO_" . $code . "_DESCRIPTION" . "#"] = $img["DESCRIPTION"];
+			$options["#SEO_" . $code . "#"] =
+				'<img src="' . $img["SRC"] . '" alt="' . htmlspecialchars($img["DESCRIPTION"]) . '">';
+		}
+		foreach ($seoContent["ATTRIBS"] as $code => $v) {
+			$options["#SEO_" . $code . "#"] = $seoContent["ATTRIBS"][$code]["VALUE"];
+		}
+		$GLOBALS["RODZETA"]["SEO"] = $options;
 	}
 });
-
 
 EventManager::getInstance()->addEventHandler("main", "OnEpilog", function () {
 	if (CSite::InDir("/bitrix/")) {
@@ -62,21 +85,21 @@ EventManager::getInstance()->addEventHandler("main", "OnEpilog", function () {
 
 	global $APPLICATION;
 
-	if (empty($GLOBALS["rodzeta"]["seo_content"])) {
+	if (empty($GLOBALS["RODZETA"]["SEO"])) {
 		return;
 	}
 
-	if (!empty($GLOBALS["rodzeta"]["seo_content"]["ELEMENT_META_TITLE"])) {
-		$APPLICATION->SetPageProperty("title", $GLOBALS["rodzeta"]["seo_content"]["ELEMENT_META_TITLE"]);
+	if (!empty($GLOBALS["RODZETA"]["SEO"]["#SEO_ELEMENT_META_TITLE#"])) {
+		$APPLICATION->SetPageProperty("title", $GLOBALS["RODZETA"]["SEO"]["#SEO_ELEMENT_META_TITLE#"]);
 	}
-	if (!empty($GLOBALS["rodzeta"]["seo_content"]["ELEMENT_META_KEYWORDS"])) {
-		$APPLICATION->SetPageProperty("keywords", $GLOBALS["rodzeta"]["seo_content"]["ELEMENT_META_KEYWORDS"]);
+	if (!empty($GLOBALS["RODZETA"]["SEO"]["#SEO_ELEMENT_META_KEYWORDS#"])) {
+		$APPLICATION->SetPageProperty("keywords", $GLOBALS["RODZETA"]["SEO"]["#SEO_ELEMENT_META_KEYWORDS#"]);
 	}
-	if (!empty($GLOBALS["rodzeta"]["seo_content"]["ELEMENT_META_DESCRIPTION"])) {
-		$APPLICATION->SetPageProperty("description", $GLOBALS["rodzeta"]["seo_content"]["ELEMENT_META_DESCRIPTION"]);
+	if (!empty($GLOBALS["RODZETA"]["SEO"]["#SEO_ELEMENT_META_DESCRIPTION#"])) {
+		$APPLICATION->SetPageProperty("description", $GLOBALS["RODZETA"]["SEO"]["#SEO_ELEMENT_META_DESCRIPTION#"]);
 	}
-	if (!empty($GLOBALS["rodzeta"]["seo_content"]["ELEMENT_PAGE_TITLE"])) {
-		$APPLICATION->SetTitle($GLOBALS["rodzeta"]["seo_content"]["ELEMENT_PAGE_TITLE"]);
+	if (!empty($GLOBALS["RODZETA"]["SEO"]["#SEO_ELEMENT_PAGE_TITLE#"])) {
+		$APPLICATION->SetTitle($GLOBALS["RODZETA"]["SEO"]["#SEO_ELEMENT_PAGE_TITLE#"]);
 	}
 
 });

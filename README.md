@@ -10,16 +10,32 @@
 
 - задайте в настройках ID инфоблока и раздела для источника SEO-контента;
 - URL для привязки указывается в названии элемента инфоблока;
-- на странице автоматически заменяются стандартные теги заданные во вкладке SEO (META TITLE, META KEYWORDS, META DESCRIPTION, Заголовок элемента).
+- на странице автоматически заменяются стандартные мета-теги заданные во вкладке SEO (META TITLE, META KEYWORDS, META DESCRIPTION, Заголовок элемента);
+- на странице автоматически заменяются прописанные "пользовательские теги".
 
 ### Пример для переопределения значений или использования в result_modifier.php компонента "Элемент каталога"
 
-    if (!empty($GLOBALS["rodzeta"]["seo_content"]["DETAIL_PICTURE"])) {
-        $arResult["DETAIL_PICTURE"] = CFile::GetFileArray($GLOBALS["rodzeta"]["seo_content"]["DETAIL_PICTURE"]);
+    if (!empty($GLOBALS["RODZETA"]["SEO"]["#SEO_DETAIL_PICTURE_ARRAY#"])) {
+        $arResult["DETAIL_PICTURE"] = $GLOBALS["RODZETA"]["SEO"]["#SEO_DETAIL_PICTURE_ARRAY#"];
     }
-    if (!empty($GLOBALS["rodzeta"]["seo_content"]["DETAIL_TEXT"])) {
-        $arResult["DETAIL_TEXT"] = $GLOBALS["rodzeta"]["seo_content"]["DETAIL_TEXT"];
+    if (!empty($GLOBALS["RODZETA"]["SEO"]["#SEO_DETAIL_TEXT#"])) {
+        $arResult["DETAIL_TEXT"] = $GLOBALS["RODZETA"]["SEO"]["#SEO_DETAIL_TEXT#"];
     }
+
+### Список "пользовательских тегов" для вставки в любое место страницы
+ 
+    #SEO_ELEMENT_META_TITLE#
+    #SEO_ELEMENT_META_KEYWORDS#
+    #SEO_ELEMENT_META_DESCRIPTION#
+    #SEO_ELEMENT_PAGE_TITLE#
+    #SEO_PREVIEW_TEXT#
+    #SEO_DETAIL_TEXT#
+    #SEO_PREVIEW_PICTURE_SRC#
+    #SEO_PREVIEW_PICTURE_DESCRIPTION#
+    #SEO_PREVIEW_PICTURE#
+    #SEO_DETAIL_PICTURE_SRC#
+    #SEO_DETAIL_PICTURE_DESCRIPTION#
+    #SEO_DETAIL_PICTURE#
 
 ##  Описание техподдержки и контактных данных
 
