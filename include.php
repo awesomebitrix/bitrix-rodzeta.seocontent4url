@@ -74,6 +74,17 @@ EventManager::getInstance()->addEventHandler("main", "OnBeforeProlog", function 
 		foreach ($seoContent["ATTRIBS"] as $code => $v) {
 			$options["#SEO_" . $code . "#"] = $seoContent["ATTRIBS"][$code]["VALUE"];
 		}
+
+		// redefine seo-content by request params
+		if (Option::get("rodzeta.seocontent4url", "use_request_params") == "Y") {
+			$fields = parse_ini_string(Option::get("rodzeta.seocontent4url", "input_params"));
+			foreach ($fields as $dest => $src) {
+				if (isset($_REQUEST[$src])) {
+					$options["#SEO_" . $dest . "#"] = $_REQUEST[$src];
+				}
+			}
+		}
+
 		$GLOBALS["RODZETA"]["SEO"] = $options;
 	}
 });

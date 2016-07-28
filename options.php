@@ -99,7 +99,7 @@ $tabControl->begin();
 			<label>Список параметров запроса</label>
 		</td>
 		<td class="adm-detail-content-cell-r" width="50%">
-			<textarea name="input_params" rows="6"
+			<textarea name="input_params" rows="6" cols="50"
 				placeholder="utm_term=KEYWORD"><?= Option::get("rodzeta.seocontent4url", "input_params") ?></textarea>
 		</td>
 	</tr>
