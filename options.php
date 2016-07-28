@@ -100,7 +100,7 @@ $tabControl->begin();
 		</td>
 		<td class="adm-detail-content-cell-r" width="50%">
 			<textarea name="input_params" rows="6" cols="50"
-				placeholder="utm_term=KEYWORD"><?= Option::get("rodzeta.seocontent4url", "input_params") ?></textarea>
+				placeholder="ELEMENT_META_KEYWORDS=utm_term"><?= Option::get("rodzeta.seocontent4url", "input_params") ?></textarea>
 		</td>
 	</tr>
 
