@@ -39,7 +39,8 @@ if ($request->isPost() && check_bitrix_sessid()) {
 	if (!empty($save) || !empty($restore)) {
 		Option::set("rodzeta.seocontent4url", "iblock_id", (int)$request->getPost("iblock_id"));
 		Option::set("rodzeta.seocontent4url", "section_id", (int)$request->getPost("section_id"));
-		//Option::set("rodzeta.seocontent4url", "input_params", $request->getPost("input_params"));
+		Option::set("rodzeta.seocontent4url", "use_request_params", $request->getPost("use_request_params"));
+		Option::set("rodzeta.seocontent4url", "input_params", $request->getPost("input_params"));
 
 		CAdminMessage::showMessage(array(
 	    "MESSAGE" => Loc::getMessage("RODZETA_SEOCONTENT4URL_OPTIONS_SAVED"),
@@ -79,19 +80,29 @@ $tabControl->begin();
 		</td>
 	</tr>
 
-	<?php /*
+	<tr class="heading">
+		<td colspan="2">Настройки для привязки параметров http-запроса</td>
+	</tr>
+
 	<tr>
 		<td class="adm-detail-content-cell-l" width="50%">
-			<label>Список входных параметров запроса</label>
+			<label>Использовать параметры запроса для установки значений SEO-контента</label>
+		</td>
+		<td class="adm-detail-content-cell-r" width="50%">
+			<input name="use_request_params" value="Y" type="checkbox"
+				<?= Option::get("rodzeta.seocontent4url", "use_request_params") == "Y"? "checked" : "" ?>>
+		</td>
+	</tr>
+
+	<tr>
+		<td class="adm-detail-content-cell-l" width="50%">
+			<label>Список параметров запроса</label>
 		</td>
 		<td class="adm-detail-content-cell-r" width="50%">
 			<textarea name="input_params" rows="6"
-				placeholder="например
-utm_term
-..."><?= Option::get("rodzeta.seocontent4url", "input_params") ?></textarea>
+				placeholder="utm_term=KEYWORD"><?= Option::get("rodzeta.seocontent4url", "input_params") ?></textarea>
 		</td>
 	</tr>
-	*/ ?>
 
 	<?php
 	 $tabControl->buttons();
