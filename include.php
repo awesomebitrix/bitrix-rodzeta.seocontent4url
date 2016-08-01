@@ -18,75 +18,28 @@ EventManager::getInstance()->addEventHandler("main", "OnBeforeProlog", function 
 
 	global $APPLICATION;
 
+	$GLOBALS["RODZETA"]["SEO"] = array();
+
+	// set seo-content by URL
 	$currentUrl = !empty($_SERVER["REDIRECT_URL"])?
 		$_SERVER["REDIRECT_URL"] : $APPLICATION->GetCurPage();
+	\Rodzeta\Seocontent4url\Utils::getSeoContent(
+		$currentUrl,
+		Option::get("rodzeta.seocontent4url", "iblock_id", 1),
+		Option::get("rodzeta.seocontent4url", "section_id", 21),
+		$GLOBALS["RODZETA"]["SEO"]
+	);
 
-	// init seo content by current url
-	$iblockId = Option::get("rodzeta.seocontent4url", "iblock_id", 1);
-	$seoContent = \Bitrix\Iblock\ElementTable::getRow(array(
-		"filter" => array(
-			"IBLOCK_ID" => $iblockId,
-			"IBLOCK_SECTION_ID" => Option::get("rodzeta.seocontent4url", "section_id", 21),
-			"NAME" => $currentUrl,
-			"ACTIVE" => "Y"
-		),
-	));
-	if (!empty($seoContent)) {
-		// get attribs
-		$seoContent["ATTRIBS"] = array();
-		$res = \CIBlockElement::GetProperty(
-			$iblockId,
-			$seoContent["ID"],
-			"sort",
-			"asc",
-			array("CODE" => "ATTRIBS")
-		);
-		while ($v = $res->Fetch()) {
-			$seoContent["ATTRIBS"][$v["DESCRIPTION"]] = array(
-				"FIELD" => null,
-				"VALUE" => $v["VALUE"],
-			);
-		}
-		// get seo tags values
-		$ipropValues = new \Bitrix\Iblock\InheritedProperty\ElementValues($iblockId, $seoContent["ID"]);
-		$seoContent = array_merge($ipropValues->getValues(), $seoContent);
-
-		$options = array();
-		foreach (array(
-					//"NAME",
-					"PREVIEW_TEXT",
-					"DETAIL_TEXT",
-					"ELEMENT_META_TITLE",
-					"ELEMENT_META_KEYWORDS",
-					"ELEMENT_META_DESCRIPTION",
-					"ELEMENT_PAGE_TITLE"
-				) as $code) {
-			$options["#SEO_" . $code . "#"] = $seoContent[$code];
-		}
-		foreach (array("PREVIEW_PICTURE", "DETAIL_PICTURE") as $code) {
-			$img = \CFile::GetFileArray($seoContent[$code]);
-			$options["#SEO_" . $code . "_ARRAY" . "#"] = $img;
-			$options["#SEO_" . $code . "_SRC" . "#"] = $img["SRC"];
-			$options["#SEO_" . $code . "_DESCRIPTION" . "#"] = $img["DESCRIPTION"];
-			$options["#SEO_" . $code . "#"] =
-				'<img src="' . $img["SRC"] . '" alt="' . htmlspecialchars($img["DESCRIPTION"]) . '">';
-		}
-		foreach ($seoContent["ATTRIBS"] as $code => $v) {
-			$options["#SEO_" . $code . "#"] = $seoContent["ATTRIBS"][$code]["VALUE"];
-		}
-
-		// redefine seo-content by request params
-		if (Option::get("rodzeta.seocontent4url", "use_request_params") == "Y") {
-			$fields = parse_ini_string(Option::get("rodzeta.seocontent4url", "input_params"));
-			foreach ($fields as $dest => $src) {
-				if (isset($_REQUEST[$src])) {
-					$options["#SEO_" . $dest . "#"] = $_REQUEST[$src];
-				}
+	// set seo-content by request params
+	if (Option::get("rodzeta.seocontent4url", "use_request_params") == "Y") {
+		$fields = parse_ini_string(Option::get("rodzeta.seocontent4url", "input_params"));
+		foreach ($fields as $dest => $src) {
+			if (isset($_REQUEST[$src])) {
+				$GLOBALS["RODZETA"]["SEO"]["#SEO_" . $dest . "#"] = $_REQUEST[$src];
 			}
 		}
-
-		$GLOBALS["RODZETA"]["SEO"] = $options;
 	}
+
 });
 
 EventManager::getInstance()->addEventHandler("main", "OnEpilog", function () {
