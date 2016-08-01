@@ -27,6 +27,10 @@ final class Utils {
 	);
 
 	static function getSeoContent($name, $iblockId, $sectionId, &$options, $defaultId = null) {
+		if (empty($iblockId) || empty($sectionId)) {
+			return;
+		}
+
 		$seoContent = \Bitrix\Iblock\ElementTable::getRow(array(
 			"filter" => array(
 				"IBLOCK_ID" => $iblockId,
