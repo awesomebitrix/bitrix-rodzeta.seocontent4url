@@ -30,6 +30,24 @@ EventManager::getInstance()->addEventHandler("main", "OnBeforeProlog", function 
 		$GLOBALS["RODZETA"]["SEO"]
 	);
 
+	// set seo-content by UTM
+	if (Option::get("rodzeta.seocontent4url", "utm_iblock_id") && Option::get("rodzeta.seocontent4url", "utm_section_id")) {
+		$fields = array_filter(array_map("trim", explode("\n", Option::get("rodzeta.seocontent4url", "utm_input_params"))));
+		$currentParams = array();
+		foreach ($fields as $code) {
+			if (isset($_REQUEST[$code])) {
+				$currentParams[] = $code . "=" . $_REQUEST[$code];
+				//$currentParams[$code] = filter_var($_REQUEST[$code], FILTER_SANITIZE_STRING);
+			}
+		}
+		\Rodzeta\Seocontent4url\Utils::getSeoContent(
+			implode("&", $currentParams),
+			Option::get("rodzeta.seocontent4url", "utm_iblock_id"),
+			Option::get("rodzeta.seocontent4url", "utm_section_id"),
+			$GLOBALS["RODZETA"]["SEO"]
+		);
+	}
+
 	// set seo-content by request params
 	if (Option::get("rodzeta.seocontent4url", "use_request_params") == "Y") {
 		$fields = parse_ini_string(Option::get("rodzeta.seocontent4url", "input_params"));
