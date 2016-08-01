@@ -11,6 +11,21 @@ use \Bitrix\Main\Config\Option;
 
 final class Utils {
 
+	static $fieldsMain = array(
+		//"NAME",
+		"PREVIEW_TEXT",
+		"DETAIL_TEXT",
+		"ELEMENT_META_TITLE",
+		"ELEMENT_META_KEYWORDS",
+		"ELEMENT_META_DESCRIPTION",
+		"ELEMENT_PAGE_TITLE"
+	);
+
+	static $fieldsImg = array(
+		"PREVIEW_PICTURE",
+		"DETAIL_PICTURE"
+	);
+
 	static function getSeoContent($name, $iblockId, $sectionId, &$options) {
 		$seoContent = \Bitrix\Iblock\ElementTable::getRow(array(
 			"filter" => array(
@@ -35,9 +50,6 @@ final class Utils {
 			array("CODE" => "ATTRIBS")
 		);
 		while ($v = $res->Fetch()) {
-			if (trim($v["VALUE"]) == "") {
-				continue;
-			}
 			$seoContent["ATTRIBS"][$v["DESCRIPTION"]] = array(
 				"FIELD" => null,
 				"VALUE" => $v["VALUE"],
@@ -47,31 +59,23 @@ final class Utils {
 		// get seo tags values
 		$ipropValues = new \Bitrix\Iblock\InheritedProperty\ElementValues($iblockId, $seoContent["ID"]);
 		foreach ($ipropValues->getValues() as $code => $v) {
-			if (trim($v) == "") {
+			if ($v == "") {
 				continue;
 			}
 			$seoContent[$code] = $v;
 		}
 
-		// get main values
-		foreach (array(
-					//"NAME",
-					"PREVIEW_TEXT",
-					"DETAIL_TEXT",
-					"ELEMENT_META_TITLE",
-					"ELEMENT_META_KEYWORDS",
-					"ELEMENT_META_DESCRIPTION",
-					"ELEMENT_PAGE_TITLE"
-				) as $code) {
-			if (trim($seoContent[$code]) == "") {
+		// init values
+		foreach (self::$fieldsMain as $code) {
+			if ($seoContent[$code] == "" && isset($options["#SEO_" . $code . "#"])) {
 				continue;
 			}
 			$options["#SEO_" . $code . "#"] = $seoContent[$code];
 		}
 
-		// get images
-		foreach (array("PREVIEW_PICTURE", "DETAIL_PICTURE") as $code) {
-			if (trim($seoContent[$code]) == "") {
+		// init images
+		foreach (self::$fieldsImg as $code) {
+			if ($seoContent[$code] == "" && isset($options["#SEO_" . $code . "#"])) {
 				continue;
 			}
 			$img = \CFile::GetFileArray($seoContent[$code]);
@@ -82,8 +86,11 @@ final class Utils {
 				'<img src="' . $img["SRC"] . '" alt="' . htmlspecialchars($img["DESCRIPTION"]) . '">';
 		}
 
-		// get attribs
+		// init attribs
 		foreach ($seoContent["ATTRIBS"] as $code => $v) {
+			if ($seoContent["ATTRIBS"][$code]["VALUE"] == "" && isset($options["#SEO_" . $code . "#"])) {
+				continue;
+			}
 			$options["#SEO_" . $code . "#"] = $seoContent["ATTRIBS"][$code]["VALUE"];
 		}
 	}
