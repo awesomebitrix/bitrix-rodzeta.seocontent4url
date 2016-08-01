@@ -11,6 +11,8 @@ use Bitrix\Main\Loader;
 use Bitrix\Main\EventManager;
 use Bitrix\Main\Config\Option;
 
+\CModule::IncludeModule("iblock");
+
 EventManager::getInstance()->addEventHandler("main", "OnBeforeProlog", function () {
 	if (CSite::InDir("/bitrix/")) {
 		return;
