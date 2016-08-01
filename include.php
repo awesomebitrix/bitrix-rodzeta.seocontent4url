@@ -20,6 +20,16 @@ EventManager::getInstance()->addEventHandler("main", "OnBeforeProlog", function 
 
 	$GLOBALS["RODZETA"]["SEO"] = array();
 
+	// set seo-content by request params
+	if (Option::get("rodzeta.seocontent4url", "use_request_params") == "Y") {
+		$fields = parse_ini_string(Option::get("rodzeta.seocontent4url", "input_params"));
+		foreach ($fields as $dest => $src) {
+			if (!empty($_REQUEST[$src])) {
+				$GLOBALS["RODZETA"]["SEO"]["#SEO_" . $dest . "#"] = $_REQUEST[$src];
+			}
+		}
+	}
+
 	// set seo-content by URL
 	$currentUrl = !empty($_SERVER["REDIRECT_URL"])?
 		$_SERVER["REDIRECT_URL"] : $APPLICATION->GetCurPage();
@@ -47,16 +57,6 @@ EventManager::getInstance()->addEventHandler("main", "OnBeforeProlog", function 
 			$GLOBALS["RODZETA"]["SEO"],
 			Option::get("rodzeta.seocontent4url", "utm_element_id")
 		);
-	}
-
-	// set seo-content by request params
-	if (Option::get("rodzeta.seocontent4url", "use_request_params") == "Y") {
-		$fields = parse_ini_string(Option::get("rodzeta.seocontent4url", "input_params"));
-		foreach ($fields as $dest => $src) {
-			if (isset($_REQUEST[$src])) {
-				$GLOBALS["RODZETA"]["SEO"]["#SEO_" . $dest . "#"] = $_REQUEST[$src];
-			}
-		}
 	}
 
 });
