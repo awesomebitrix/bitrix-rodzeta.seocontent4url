@@ -44,7 +44,8 @@ EventManager::getInstance()->addEventHandler("main", "OnBeforeProlog", function 
 			implode("&", $currentParams),
 			Option::get("rodzeta.seocontent4url", "utm_iblock_id"),
 			Option::get("rodzeta.seocontent4url", "utm_section_id"),
-			$GLOBALS["RODZETA"]["SEO"]
+			$GLOBALS["RODZETA"]["SEO"],
+			Option::get("rodzeta.seocontent4url", "utm_element_id")
 		);
 	}
 

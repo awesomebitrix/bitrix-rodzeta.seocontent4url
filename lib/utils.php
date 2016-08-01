@@ -26,7 +26,7 @@ final class Utils {
 		"DETAIL_PICTURE"
 	);
 
-	static function getSeoContent($name, $iblockId, $sectionId, &$options) {
+	static function getSeoContent($name, $iblockId, $sectionId, &$options, $defaultId = null) {
 		$seoContent = \Bitrix\Iblock\ElementTable::getRow(array(
 			"filter" => array(
 				"IBLOCK_ID" => $iblockId,
@@ -35,6 +35,16 @@ final class Utils {
 				"ACTIVE" => "Y"
 			),
 		));
+		if (empty($seoContent) && !empty($defaultId)) {
+			$seoContent = \Bitrix\Iblock\ElementTable::getRow(array(
+				"filter" => array(
+					"IBLOCK_ID" => $iblockId,
+					"IBLOCK_SECTION_ID" => $sectionId,
+					"ID" => $defaultId,
+					"ACTIVE" => "Y"
+				),
+			));
+		}
 		if (empty($seoContent)) {
 			return;
 		}

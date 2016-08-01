@@ -43,6 +43,7 @@ if ($request->isPost() && check_bitrix_sessid()) {
 		Option::set("rodzeta.seocontent4url", "input_params", $request->getPost("input_params"));
 		Option::set("rodzeta.seocontent4url", "utm_iblock_id", (int)$request->getPost("utm_iblock_id"));
 		Option::set("rodzeta.seocontent4url", "utm_section_id", (int)$request->getPost("utm_section_id"));
+		Option::set("rodzeta.seocontent4url", "utm_element_id", (int)$request->getPost("utm_element_id"));
 		Option::set("rodzeta.seocontent4url", "utm_input_params", $request->getPost("utm_input_params"));
 
 		CAdminMessage::showMessage(array(
@@ -102,6 +103,15 @@ $tabControl->begin();
 		</td>
 		<td class="adm-detail-content-cell-r" width="50%">
 			<input name="utm_section_id" type="text" size="4" value="<?= Option::get("rodzeta.seocontent4url", "utm_section_id") ?>">
+		</td>
+	</tr>
+
+	<tr>
+		<td class="adm-detail-content-cell-l" width="50%">
+			<label>ID элемента по умолчанию для SEO-контента</label>
+		</td>
+		<td class="adm-detail-content-cell-r" width="50%">
+			<input name="utm_element_id" type="text" size="4" value="<?= Option::get("rodzeta.seocontent4url", "utm_element_id") ?>">
 		</td>
 	</tr>
 
