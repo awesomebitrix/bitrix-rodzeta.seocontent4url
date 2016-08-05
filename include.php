@@ -32,33 +32,36 @@ EventManager::getInstance()->addEventHandler("main", "OnBeforeProlog", function 
 		}
 	}
 
-	// set seo-content by URL
-	$currentUrl = !empty($_SERVER["REDIRECT_URL"])?
-		$_SERVER["REDIRECT_URL"] : $APPLICATION->GetCurPage();
-	\Rodzeta\Seocontent4url\Utils::getSeoContent(
-		$currentUrl,
-		Option::get("rodzeta.seocontent4url", "iblock_id", 1),
-		Option::get("rodzeta.seocontent4url", "section_id", 21),
-		$GLOBALS["RODZETA"]["SEO"]
-	);
-
-	// set seo-content by UTM
-	if (Option::get("rodzeta.seocontent4url", "utm_iblock_id") && Option::get("rodzeta.seocontent4url", "utm_section_id")) {
-		$fields = array_filter(array_map("trim", explode("\n", Option::get("rodzeta.seocontent4url", "utm_input_params"))));
-		$currentParams = array();
-		foreach ($fields as $code) {
-			if (isset($_REQUEST[$code])) {
-				$currentParams[] = $code . "=" . $_REQUEST[$code];
-				//$currentParams[$code] = filter_var($_REQUEST[$code], FILTER_SANITIZE_STRING);
-			}
+	if (Option::get("rodzeta.seocontent4url", "iblock_id")) {
+		// set seo-content by URL
+		if (Option::get("rodzeta.seocontent4url", "section_code")) {
+			$currentUrl = !empty($_SERVER["REDIRECT_URL"])?
+				$_SERVER["REDIRECT_URL"] : $APPLICATION->GetCurPage();
+			\Rodzeta\Seocontent4url\Utils::getSeoContent(
+				$currentUrl,
+				Option::get("rodzeta.seocontent4url", "iblock_id"),
+				Option::get("rodzeta.seocontent4url", "section_code"),
+				$GLOBALS["RODZETA"]["SEO"]
+			);
 		}
-		\Rodzeta\Seocontent4url\Utils::getSeoContent(
-			implode("&", $currentParams),
-			Option::get("rodzeta.seocontent4url", "utm_iblock_id"),
-			Option::get("rodzeta.seocontent4url", "utm_section_id"),
-			$GLOBALS["RODZETA"]["SEO"],
-			Option::get("rodzeta.seocontent4url", "utm_element_id")
-		);
+		// set seo-content by UTM
+		if (Option::get("rodzeta.seocontent4url", "utm_section_code")) {
+			$fields = array_filter(array_map("trim", explode("\n", Option::get("rodzeta.seocontent4url", "utm_input_params"))));
+			$currentParams = array();
+			foreach ($fields as $code) {
+				if (isset($_REQUEST[$code])) {
+					$currentParams[] = $code . "=" . $_REQUEST[$code];
+					//$currentParams[$code] = filter_var($_REQUEST[$code], FILTER_SANITIZE_STRING);
+				}
+			}
+			\Rodzeta\Seocontent4url\Utils::getSeoContent(
+				implode("&", $currentParams),
+				Option::get("rodzeta.seocontent4url", "iblock_id"),
+				Option::get("rodzeta.seocontent4url", "utm_section_code"),
+				$GLOBALS["RODZETA"]["SEO"],
+				Option::get("rodzeta.seocontent4url", "utm_element_code")
+			);
+		}
 	}
 
 });

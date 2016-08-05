@@ -38,13 +38,14 @@ $tabControl = new CAdminTabControl("tabControl", array(
 if ($request->isPost() && check_bitrix_sessid()) {
 	if (!empty($save) || !empty($restore)) {
 		Option::set("rodzeta.seocontent4url", "iblock_id", (int)$request->getPost("iblock_id"));
-		Option::set("rodzeta.seocontent4url", "section_id", (int)$request->getPost("section_id"));
+		Option::set("rodzeta.seocontent4url", "section_code", $request->getPost("section_code"));
+
+		Option::set("rodzeta.seocontent4url", "utm_section_code", $request->getPost("utm_section_code"));
+		Option::set("rodzeta.seocontent4url", "utm_element_code", $request->getPost("utm_element_code"));
+		Option::set("rodzeta.seocontent4url", "utm_input_params", $request->getPost("utm_input_params"));
+
 		Option::set("rodzeta.seocontent4url", "use_request_params", $request->getPost("use_request_params"));
 		Option::set("rodzeta.seocontent4url", "input_params", $request->getPost("input_params"));
-		Option::set("rodzeta.seocontent4url", "utm_iblock_id", (int)$request->getPost("utm_iblock_id"));
-		Option::set("rodzeta.seocontent4url", "utm_section_id", (int)$request->getPost("utm_section_id"));
-		Option::set("rodzeta.seocontent4url", "utm_element_id", (int)$request->getPost("utm_element_id"));
-		Option::set("rodzeta.seocontent4url", "utm_input_params", $request->getPost("utm_input_params"));
 
 		CAdminMessage::showMessage(array(
 	    "MESSAGE" => Loc::getMessage("RODZETA_SEOCONTENT4URL_OPTIONS_SAVED"),
@@ -63,12 +64,12 @@ $tabControl->begin();
 	<?php $tabControl->beginNextTab() ?>
 
 	<tr class="heading">
-		<td colspan="2">Настройки для привязки контента по URL</td>
+		<td colspan="2">Настройки для привязки SEO-контента из инфоблоков</td>
 	</tr>
 
 	<tr>
 		<td class="adm-detail-content-cell-l" width="50%">
-			<label>ID инфоблока SEO-контента</label>
+			<label>ID инфоблока</label>
 		</td>
 		<td class="adm-detail-content-cell-r" width="50%">
 			<input class="input" type="text" size="4" name="iblock_id" value="<?= Option::get("rodzeta.seocontent4url", "iblock_id", 1) ?>">
@@ -77,41 +78,31 @@ $tabControl->begin();
 
 	<tr>
 		<td class="adm-detail-content-cell-l" width="50%">
-			<label>ID раздела SEO-контента</label>
+			<label>Код раздела для привязки по URL</label>
 		</td>
 		<td class="adm-detail-content-cell-r" width="50%">
-			<input name="section_id" type="text" size="4" value="<?= Option::get("rodzeta.seocontent4url", "section_id", 21) ?>">
-		</td>
-	</tr>
-
-	<tr class="heading">
-		<td colspan="2">Настройки для привязки контента по UTM-меткам</td>
-	</tr>
-
-	<tr>
-		<td class="adm-detail-content-cell-l" width="50%">
-			<label>ID инфоблока SEO-контента</label>
-		</td>
-		<td class="adm-detail-content-cell-r" width="50%">
-			<input class="input" type="text" size="4" name="utm_iblock_id" value="<?= Option::get("rodzeta.seocontent4url", "utm_iblock_id") ?>">
+			<input name="section_code" type="text" value="<?= Option::get("rodzeta.seocontent4url", "section_code") ?>" disabled>
+			<input name="section_code" type="hidden" value="RODZETA_SEO_BY_URL">
 		</td>
 	</tr>
 
 	<tr>
 		<td class="adm-detail-content-cell-l" width="50%">
-			<label>ID раздела SEO-контента</label>
+			<label>Код раздела для привязки по UTM</label>
 		</td>
 		<td class="adm-detail-content-cell-r" width="50%">
-			<input name="utm_section_id" type="text" size="4" value="<?= Option::get("rodzeta.seocontent4url", "utm_section_id") ?>">
+			<input name="utm_section_code" type="text" value="<?= Option::get("rodzeta.seocontent4url", "utm_section_code") ?>" disabled>
+			<input name="utm_section_code" type="hidden" value="RODZETA_SEO_BY_UTM">
 		</td>
 	</tr>
 
 	<tr>
 		<td class="adm-detail-content-cell-l" width="50%">
-			<label>ID элемента по умолчанию для SEO-контента</label>
+			<label>ID элемента по умолчанию для привязки по UTM</label>
 		</td>
 		<td class="adm-detail-content-cell-r" width="50%">
-			<input name="utm_element_id" type="text" size="4" value="<?= Option::get("rodzeta.seocontent4url", "utm_element_id") ?>">
+			<input name="utm_element_code" type="text" size="30" value="<?= Option::get("rodzeta.seocontent4url", "utm_element_code") ?>" disabled>
+			<input name="utm_element_code" type="hidden" value="RODZETA_SEO_BY_UTM_DEFAULT">
 		</td>
 	</tr>
 

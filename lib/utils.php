@@ -26,28 +26,39 @@ final class Utils {
 		"DETAIL_PICTURE"
 	);
 
-	static function getSeoContent($name, $iblockId, $sectionId, &$options, $defaultId = null) {
-		if (empty($iblockId) || empty($sectionId)) {
+	static function getSeoContent($name, $iblockId, $sectionCode, &$options, $defaultCode = null) {
+		if (empty($iblockId) || empty($sectionCode)) {
 			return;
 		}
 
-		$seoContent = \Bitrix\Iblock\ElementTable::getRow(array(
-			"filter" => array(
-				"IBLOCK_ID" => $iblockId,
-				"IBLOCK_SECTION_ID" => $sectionId,
-				"NAME" => $name,
-				"ACTIVE" => "Y"
-			),
-		));
-		if (empty($seoContent) && !empty($defaultId)) {
-			$seoContent = \Bitrix\Iblock\ElementTable::getRow(array(
-				"filter" => array(
+		$seoContent = null;
+		if (!empty($name)) {
+			$res = \CIBlockElement::GetList(
+				array("SORT" => "ASC"),
+				array(
 					"IBLOCK_ID" => $iblockId,
-					"IBLOCK_SECTION_ID" => $sectionId,
-					"ID" => $defaultId,
+					"SECTION_CODE" => $sectionCode,
+					"NAME" => $name,
 					"ACTIVE" => "Y"
-				),
-			));
+				)
+			);
+			if ($row = $res->GetNextElement()) {
+				$seoContent = $row->GetFields();
+			}
+		}
+		if (empty($seoContent) && !empty($defaultCode)) {
+			$res = \CIBlockElement::GetList(
+				array("SORT" => "ASC"),
+				array(
+					"IBLOCK_ID" => $iblockId,
+					"SECTION_CODE" => $sectionCode,
+					"CODE" => $defaultCode,
+					"ACTIVE" => "Y"
+				)
+			);
+			if ($row = $res->GetNextElement()) {
+				$seoContent = $row->GetFields();
+			}
 		}
 		if (empty($seoContent)) {
 			return;
