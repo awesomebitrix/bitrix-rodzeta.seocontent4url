@@ -69,10 +69,25 @@ $tabControl->begin();
 
 	<tr>
 		<td class="adm-detail-content-cell-l" width="50%">
-			<label>ID инфоблока</label>
+			<label>Инфоблок</label>
 		</td>
 		<td class="adm-detail-content-cell-r" width="50%">
-			<input class="input" type="text" size="4" name="iblock_id" value="<?= Option::get("rodzeta.seocontent4url", "iblock_id", 1) ?>">
+			<?= GetIBlockDropDownListEx(
+				Option::get("rodzeta.seocontent4url", "iblock_id", 1),
+				"iblock_type_id",
+				"iblock_id"
+				/*
+				,
+				array(
+					"MIN_PERMISSION" => "X",
+					"OPERATION" => "iblock_export",
+				),
+				'',
+				'',
+				'class="adm-detail-iblock-types"',
+				'class="adm-detail-iblock-list"'
+				*/
+			) ?>
 		</td>
 	</tr>
 
@@ -98,7 +113,7 @@ $tabControl->begin();
 
 	<tr>
 		<td class="adm-detail-content-cell-l" width="50%">
-			<label>ID элемента по умолчанию для привязки по UTM</label>
+			<label>Код элемента по умолчанию для привязки по UTM</label>
 		</td>
 		<td class="adm-detail-content-cell-r" width="50%">
 			<input name="utm_element_code" type="text" size="30" value="<?= Option::get("rodzeta.seocontent4url", "utm_element_code") ?>" disabled>
