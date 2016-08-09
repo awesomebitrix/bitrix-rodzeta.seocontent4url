@@ -75,18 +75,10 @@ $tabControl->begin();
 			<?= GetIBlockDropDownListEx(
 				Option::get("rodzeta.seocontent4url", "iblock_id", 1),
 				"iblock_type_id",
-				"iblock_id"
-				/*
-				,
+				"iblock_id",
 				array(
-					"MIN_PERMISSION" => "X",
-					"OPERATION" => "iblock_export",
-				),
-				'',
-				'',
-				'class="adm-detail-iblock-types"',
-				'class="adm-detail-iblock-list"'
-				*/
+					"MIN_PERMISSION" => "R",
+				)
 			) ?>
 		</td>
 	</tr>
