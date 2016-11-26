@@ -1,4 +1,5 @@
-﻿
+** модуль не актуален, часть функционала модуля перенесена в https://github.com/rivetweb/bitrix-rodzeta.siteoptions ** 
+ 
 # SEO-контент для произвольного URL
 
 ## Описание решения
